@@ -15,7 +15,6 @@ def filter_datum(fields: List[str],
         separator: a string representing by which character is separating
         all fields in the log line (message)
     '''
-    for f in fields:
-        message = re.sub(rf'{f}=.*?{separator}',
-                         f'{f}={redaction}{separator}', message)
+    for field in fields:
+        message = re.sub(rf"{field}=[^;]*", f"{field}={redaction}{separator}", message)
     return message
