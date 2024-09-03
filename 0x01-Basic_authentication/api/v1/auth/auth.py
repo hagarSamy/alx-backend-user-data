@@ -2,7 +2,6 @@ from flask import request
 from typing import List, TypeVar
 
 '''auth module'''
-User = TypeVar('User')
 
 
 class Auth:
@@ -15,6 +14,6 @@ class Auth:
         '''authorization_header'''
         return None
 
-    def current_user(self, request=None) -> User:
+    def current_user(self, request=None) -> TypeVar('User'):
         '''urrent_user'''
         return None
