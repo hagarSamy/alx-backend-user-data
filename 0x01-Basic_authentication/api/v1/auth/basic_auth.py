@@ -17,4 +17,3 @@ class BasicAuth(Auth):
         ):
             return None
         return authorization_header[len('Basic '):]
-        
