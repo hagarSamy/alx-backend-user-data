@@ -2,7 +2,7 @@
 '''BasicAuth module'''
 
 from api.v1.auth.auth import Auth
-from base64 import b64decode
+from base64 import b64decode, binascii
 import re
 
 
@@ -33,4 +33,7 @@ class BasicAuth(Auth):
         base64_pattern = re.compile(r'^[A-Za-z0-9+/]*={0,2}$')
         if not base64_pattern.match(base64_authorization_header):
             return None
-        return b64decode(base64_authorization_header).decode('utf-8')
+        try:
+            return b64decode(base64_authorization_header).decode('utf-8')
+        except (binascii.Error, UnicodeDecodeError):
+            return None
