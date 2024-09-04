@@ -19,9 +19,6 @@ class Auth:
             excluded_paths is None or
             path not in excluded_paths
         ):
-            if path[-1] == "*":
-                if path.startswith(path[:-1]):
-                    return False
             return True
         return False
 
