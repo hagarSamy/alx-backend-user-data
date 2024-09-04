@@ -14,7 +14,7 @@ class Auth:
         if path is not None:
             if path[-1] != '/':
                 path += '/'
-            if path[-1] == "*":
+            elif path[-1] == "*":
                 if path.startswith(path[:-1]):
                     return False
             return True
