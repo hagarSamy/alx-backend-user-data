@@ -14,15 +14,14 @@ class Auth:
         if path is not None:
             if path[-1] != '/':
                 path += '/'
-            elif path[-1] == "*":
-                if path.startswith(path[:-1]):
-                    return False
-            return True
         if (
             path is None or
             excluded_paths is None or
             path not in excluded_paths
         ):
+            if path[-1] == "*":
+                if path.startswith(path[:-1]):
+                    return False
             return True
         return False
 
