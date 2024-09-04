@@ -6,8 +6,6 @@ from base64 import b64decode, binascii
 import re
 from typing import Union, TypeVar
 
-User = TypeVar('User')
-
 
 class BasicAuth(Auth):
     '''handling BasicAuth'''
@@ -54,7 +52,7 @@ class BasicAuth(Auth):
         return tuple(decoded_base64_authorization_header.split(':', 1))
 
     def user_object_from_credentials(self, user_email:
-                                     str, user_pwd: str) -> User:
+                                     str, user_pwd: str) -> TypeVar('User'):
         '''returns the User instance based on his email and password.'''
         if (
             user_email is None or
