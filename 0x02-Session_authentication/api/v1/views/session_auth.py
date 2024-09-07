@@ -16,17 +16,17 @@ def release_session() -> str:
     email = request.form.get('email')
     pswd = request.form.get('password')
     if email is None:
-        return jsonify({ "error": "email missing" }), 400
+        return jsonify({"error": "email missing"}), 400
     if pswd is None:
-        return jsonify({ "error": "password missing" }), 400
+        return jsonify({"error": "password missing"}), 400
     users = User.search({"email": email})
     if not users:
-        return jsonify({"error": "no user found for this email" }), 401
+        return jsonify({"error": "no user found for this email"}), 401
     for user in users:
         if user.is_valid_password(pswd):
             from api.v1.app import auth
             session_id = auth.create_session(user.id)
-            jsoned_user = user.to_json()
+            jsoned_user = jsonify(user.to_json())
             session_name = os.getenv('SESSION_NAME')
             jsoned_user.set_cookie(session_name, session_id)
             return jsoned_user
