@@ -26,7 +26,7 @@ def release_session() -> str:
         if user.is_valid_password(pswd):
             from api.v1.app import auth
             session_id = auth.create_session(user.id)
-            jsoned_user = user.to_json()
+            jsoned_user = jsonify(user.to_json())
             session_name = os.getenv('SESSION_NAME')
             jsoned_user.set_cookie(session_name, session_id)
             return jsoned_user
