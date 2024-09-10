@@ -43,9 +43,8 @@ class DB:
         returns the first row found in the users table as
         filtered by the method’s input arguments'''
         try:
-            row = self._session.query(User).filter_by(**kwargs).one()
+            return self._session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
-            raise NoResultFound('jtyjh')
+            raise NoResultFound('No result found for the given arguments')
         except InvalidRequestError:
-            raise InvalidRequestError('htth')
-        return row
+            raise InvalidRequestError("Invalid query arguments")
