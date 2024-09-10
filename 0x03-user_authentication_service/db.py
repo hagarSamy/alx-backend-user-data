@@ -39,12 +39,10 @@ class DB:
         return new_user
 
     def find_user_by(self, **kwargs) -> User:
-        '''takes in arbitrary keyword arguments and
-        returns the first row found in the users table as
-        filtered by the method’s input arguments'''
+        '''searches for a user'''
         try:
             return self._session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
-            raise NoResultFound('No result found for the given arguments')
+            raise NoResultFound
         except InvalidRequestError:
-            raise InvalidRequestError("Invalid query arguments")
+            raise InvalidRequestError
