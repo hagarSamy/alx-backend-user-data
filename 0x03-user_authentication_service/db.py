@@ -45,7 +45,7 @@ class DB:
         try:
             row = self._session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
-            raise NoResultFound('')
+            raise NoResultFound('jtyjh')
         except InvalidRequestError:
-            raise InvalidRequestError('')
+            raise InvalidRequestError('htth')
         return row
