@@ -42,7 +42,7 @@ class Auth:
         '''validate user'''
         try:
             user = self._db.find_user_by(email=email)
-            hashed_password = _hash_password(password)
-            return bcrypt.checkpw(user.hashed_password, hashed_password)
+            bytes_password = password.encode("utf-8")
+            return bcrypt.checkpw(user.hashed_password, bytes_password)
         except:
             return False
