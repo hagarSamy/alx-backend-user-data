@@ -43,6 +43,6 @@ class Auth:
         try:
             user = self._db.find_user_by(email=email)
             bytes_password = password.encode("utf-8")
-            return bcrypt.checkpw(user.hashed_password, bytes_password)
+            return bcrypt.checkpw(bytes_password, user.hashed_password)
         except Exception:
             return False
