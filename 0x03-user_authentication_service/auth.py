@@ -83,7 +83,7 @@ class Auth:
         reset_token database field'''
         try:
             user = self._db.find_user_by(email=email)
-            us_uuid = _generate_uuid() 
+            us_uuid = _generate_uuid()
             user.reset_token = us_uuid
             return us_uuid
         except Exception:
