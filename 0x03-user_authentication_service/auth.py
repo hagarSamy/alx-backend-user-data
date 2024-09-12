@@ -88,3 +88,13 @@ class Auth:
             return us_uuid
         except Exception:
             raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        '''update_password'''
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            pass_hashed = _hash_password(password)
+            user.hashed_password = pass_hashed
+            user.reset_token = None
+        except Exception:
+            raise ValueError
