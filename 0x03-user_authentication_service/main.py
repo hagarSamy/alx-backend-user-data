@@ -2,55 +2,69 @@
 """
 Main file
 """
-from user import User
-
-# print(User.__tablename__)
-
-# for column in User.__table__.columns:
-#     print("{}: {}".format(column, column.type))
-
-from db import DB
-
-# my_db = DB()
-
-# user_1 = my_db.add_user("test@test.com", "SuperHashedPwd")
-# print(user_1.id)
-
-# user_2 = my_db.add_user("test1@test.com", "SuperHashedPwd1")
-# print(user_2.id)
-
-from sqlalchemy.exc import InvalidRequestError
-from sqlalchemy.orm.exc import NoResultFound
+import requests
 
 
-my_db = DB()
+def register_user(email: str, password: str) -> None:
+    response = requests.post(
+        'http://localhost:5000/users', data={'email': email, 'password': password})
+    assert response.status_code == 200
 
-# user = my_db.add_user("test@test.com", "PwdHashed")
-# print(user.id)
 
-# find_user = my_db.find_user_by(email="test@test.com")
-# print(find_user.id)
+def log_in_wrong_password(email: str, password: str) -> None:
+    response = requests.post(
+        'http://localhost:5000/sessions', data={'email': email, 'password': password})
+    assert response.status_code == 401
 
-# try:
-#     find_user = my_db.find_user_by(email="test2@test.com")
-#     print(find_user.id)
-# except NoResultFound:
-#     print("Not found")
 
-# try:
-#     find_user = my_db.find_user_by(no_email="test@test.com")
-#     print(find_user.id)
-# except InvalidRequestError:
-#     print("Invalid")
+def log_in(email: str, password: str) -> str:
+    response = requests.post(
+        'http://localhost:5000/sessions', data={'email': email, 'password': password})
+    assert response.status_code == 200
+    return response.cookies.get('session_id')
 
-email = 'test@test.com'
-hashed_password = "hashedPwd"
 
-user = my_db.add_user(email, hashed_password)
-print(user.id)
+def profile_unlogged() -> None:
+    response = requests.get('http://localhost:5000/profile')
+    assert response.status_code == 403
 
-try:
-    my_db.update_user(user.id, hashed_password='NewPwd')
-    print("Password updated")
-except ValueError:
-    print("Error")
+
+def profile_logged(session_id: str) -> None:
+    response = requests.get('http://localhost:5000/profile',
+                            cookies={'session_id': session_id})
+    assert response.status_code == 200
+
+
+def log_out(session_id: str) -> None:
+    response = requests.delete(
+        'http://localhost:5000/sessions', cookies={'session_id': session_id})
+    assert response.status_code == 200
+
+
+def reset_password_token(email: str) -> str:
+    response = requests.post(
+        'http://localhost:5000/reset_password', data={'email': email})
+    assert response.status_code == 200
+    return response.json().get('reset_token')
+
+
+def update_password(email: str, reset_token: str, new_password: str) -> None:
+    response = requests.put('http://localhost:5000/reset_password', data={
+                            'email': email, 'reset_token': reset_token, 'new_password': new_password})
+    assert response.status_code == 200
+
+
+EMAIL = "guillaume@holberton.iofdv"
+PASSWD = "fligton"
+NEW_PASSWD = "tytowtic"
+
+if __name__ == "__main__":
+    register_user(EMAIL, PASSWD)
+    log_in_wrong_password(EMAIL, NEW_PASSWD)
+    profile_unlogged()
+    session_id = log_in(EMAIL, PASSWD)
+    profile_logged(session_id)
+    log_out(session_id)
+    reset_token = reset_password_token(EMAIL)
+    update_password(EMAIL, reset_token, NEW_PASSWD)
+    log_in(EMAIL, NEW_PASSWD)
