@@ -7,19 +7,22 @@ import requests
 
 def register_user(email: str, password: str) -> None:
     response = requests.post(
-        'http://localhost:5000/users', data={'email': email, 'password': password})
+        'http://localhost:5000/users', data={'email': email,
+                                             'password': password})
     assert response.status_code == 200
 
 
 def log_in_wrong_password(email: str, password: str) -> None:
     response = requests.post(
-        'http://localhost:5000/sessions', data={'email': email, 'password': password})
+        'http://localhost:5000/sessions', data={'email': email,
+                                                'password': password})
     assert response.status_code == 401
 
 
 def log_in(email: str, password: str) -> str:
     response = requests.post(
-        'http://localhost:5000/sessions', data={'email': email, 'password': password})
+        'http://localhost:5000/sessions', data={'email': email,
+                                                'password': password})
     assert response.status_code == 200
     return response.cookies.get('session_id')
 
@@ -50,7 +53,8 @@ def reset_password_token(email: str) -> str:
 
 def update_password(email: str, reset_token: str, new_password: str) -> None:
     response = requests.put('http://localhost:5000/reset_password', data={
-                            'email': email, 'reset_token': reset_token, 'new_password': new_password})
+                            'email': email, 'reset_token': reset_token,
+                            'new_password': new_password})
     assert response.status_code == 200
 
 
